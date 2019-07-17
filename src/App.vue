@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" @keyup.48.49.50.51.52.53.54.55.56.57="alertt">
     <img alt="Vue logo" src="./assets/logo.png">
-    <calculator msg="Welcome to Your Vue.js App"/>
+    <calculator/>
   </div>
 </template>
 
@@ -12,8 +12,9 @@ export default {
   name: 'app',
   components: {
     calculator
-  }
+  } 
 }
+
 </script>
 
 <style>
