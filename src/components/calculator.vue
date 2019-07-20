@@ -3,7 +3,7 @@
     <GlobalEvents @keyup.48.96="displayNumber(0)" @keyup.49.97="displayNumber(1)" @keyup.50.98="displayNumber(2)" @keyup.51.99="displayNumber(3)" @keyup.52.100="displayNumber(4)" @keyup.53.101="displayNumber(5)" @keyup.54.102="displayNumber(6)" @keyup.55.103="displayNumber(7)" @keyup.56.104="displayNumber(8)" @keyup.57.105="displayNumber(9)" />
     <p id="title">Kalkulator</p>
     <div id="log">{{ Numbers }}</div>
-    <div id="display">{{ displayed }} {{result}}</div>
+    <div id="display">{{ displayed }}</div>
     <div id="calcButtons">
       <div class="calcButton">%</div>
       <div @click="clearAll()" class="calcButton">C</div>
@@ -97,8 +97,10 @@ export default {
     },
     getResult()
     {
-      this.Numbers = this.Numbers.slice(0, -1);
-      this.result = Number(this.Numbers+this.displayed);
+     
+     this.displayed = eval(this.Numbers+this.displayed);
+     this.Numbers="";
+     
     }
     
   }
