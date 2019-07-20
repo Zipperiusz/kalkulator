@@ -1,29 +1,30 @@
 <template>
   <div id="window" >
-    <GlobalEvents @keyup.48.96="addNumber(0)" @keyup.49.97="addNumber(1)" @keyup.50.98="addNumber(2)" @keyup.51.99="addNumber(3)" @keyup.52.100="addNumber(4)" @keyup.53.101="addNumber(5)" @keyup.54.102="addNumber(6)" @keyup.55.103="addNumber(7)" @keyup.56.104="addNumber(8)" @keyup.57.105="addNumber(9)" />
+    <GlobalEvents @keyup.48.96="displayNumber(0)" @keyup.49.97="displayNumber(1)" @keyup.50.98="displayNumber(2)" @keyup.51.99="displayNumber(3)" @keyup.52.100="displayNumber(4)" @keyup.53.101="displayNumber(5)" @keyup.54.102="displayNumber(6)" @keyup.55.103="displayNumber(7)" @keyup.56.104="displayNumber(8)" @keyup.57.105="displayNumber(9)" />
     <p id="title">Kalkulator</p>
-    <div id="display">{{ displayed }}</div>
+    <div id="log">{{ Numbers }}</div>
+    <div id="display">{{ displayed }} {{result}}</div>
     <div id="calcButtons">
-      <div class="calcButton">CE</div>
-      <div class="calcButton">C</div>
-      <div class="calcButton"><img id="delete" src="../assets/delete.png"></div>
-      <div class="calcButton">÷</div>
-      <div @click="addNumber(7)" class="calcButtonN">7</div>
-      <div @click="addNumber(8)" class="calcButtonN">8</div>
-      <div @click="addNumber(9)" class="calcButtonN">9</div>
-      <div class="calcButton">×</div>
-      <div @click="addNumber(4)" class="calcButtonN">4</div>
-      <div @click="addNumber(5)" class="calcButtonN">5</div>
-      <div @click="addNumber(6)" class="calcButtonN">6</div>
-      <div class="calcButton">-</div>
-      <div @click="addNumber(1)" class="calcButtonN">1</div>
-      <div @click="addNumber(2)" class="calcButtonN">2</div>
-      <div @click="addNumber(3)" class="calcButtonN">3</div>
-      <div class="calcButton">+</div>
-      <div class="calcButton">±</div>
-      <div @click="addNumber(0)" class="calcButton">0</div>
+      <div class="calcButton">%</div>
+      <div @click="clearAll()" class="calcButton">C</div>
+      <div @click="deleteNumber()" class="calcButton"><img id="delete" src="../assets/delete.png"></div>
+      <div @click="addAction('/')" class="calcButton">÷</div>
+      <div @click="displayNumber(7)" class="calcButtonN">7</div>
+      <div @click="displayNumber(8)" class="calcButtonN">8</div>
+      <div @click="displayNumber(9)" class="calcButtonN">9</div>
+      <div @click="addAction('*')" class="calcButton">×</div>
+      <div @click="displayNumber(4)" class="calcButtonN">4</div>
+      <div @click="displayNumber(5)" class="calcButtonN">5</div>
+      <div @click="displayNumber(6)" class="calcButtonN">6</div>
+      <div @click="addAction('-')" class="calcButton">-</div>
+      <div @click="displayNumber(1)" class="calcButtonN">1</div>
+      <div @click="displayNumber(2)" class="calcButtonN">2</div>
+      <div @click="displayNumber(3)" class="calcButtonN">3</div>
+      <div @click="addAction('+')" class="calcButton">+</div>
+      <div @click="invert()" class="calcButton">±</div>
+      <div @click="displayNumber(0)" class="calcButtonN">0</div>
       <div class="calcButton">,</div>
-      <div @click="convert()" class="calcButton">=</div>
+      <div @click="getResult()" class="calcButton">=</div>
     </div>
 
   </div>
@@ -36,14 +37,19 @@ export default {
   name: 'calculator',
   data(){
     return{
-      displayed:""
+      displayed:"",
+      Numbers:"",
+      result:undefined
+
+      
     }
   },
   methods:
   {
-    addNumber(number){
+    displayNumber(number){
       if(this.displayed.length<=16)
       {
+      
       this.displayed = this.displayed+number;
       }
       else
@@ -52,10 +58,49 @@ export default {
       }
 
     },
-    convert(){
+    addAction(e){
+      if(this.displayed!==""){
+      if(!this.checkSign()){
+      this.Numbers =this.Numbers +  this.displayed+e;
+      this.displayed="";
+      }
+      }
+
+    },
+    deleteNumber()
+    {
+      this.displayed = this.displayed.toString();
+      this.displayed = this.displayed.slice(0, -1);
+    },
+    clearAll()
+    {
+      this.displayed = "";
+      this.Numbers = "";
+      this.result = undefined;
+    },
+    invert()
+    {
       this.displayed = Number(this.displayed);
-      //Test konwersji stringa na liczbę
-    }    
+      if(this.displayed!==undefined);
+      {
+
+        this.displayed = this.displayed*-1;
+        this.displayed = this.displayed.toString();
+      }
+    },
+    checkSign(){
+      if(this.Numbers.charAt(this.Numbers.length-1)=== "*"||"-"||"+"||"/")
+      {
+        return false;
+      }
+      else return true;
+    },
+    getResult()
+    {
+      this.Numbers = this.Numbers.slice(0, -1);
+      this.result = Number(this.Numbers+this.displayed);
+    }
+    
   }
 }
 
@@ -72,7 +117,7 @@ export default {
 {
   background-color:#3f4041;
   width:400px;
-  height: 365px;
+  height: 400px;
   margin-left: auto;
   margin-right:auto;
   color:white;
@@ -82,6 +127,17 @@ export default {
   text-align: right;
   padding:8px;
   font-size:24px;
+  width:356px;
+  margin-left:auto;
+  margin-right:auto;
+  height:20px;
+  letter-spacing: 1px;
+}
+#log
+{
+  text-align: right;
+  padding:8px;
+  font-size:10px;
   width:356px;
   margin-left:auto;
   margin-right:auto;
