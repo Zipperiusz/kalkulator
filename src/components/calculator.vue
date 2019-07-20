@@ -1,6 +1,6 @@
 <template>
   <div id="window" >
-    <GlobalEvents @keyup.48.96="displayNumber(0)" @keyup.49.97="displayNumber(1)" @keyup.50.98="displayNumber(2)" @keyup.51.99="displayNumber(3)" @keyup.52.100="displayNumber(4)" @keyup.53.101="displayNumber(5)" @keyup.54.102="displayNumber(6)" @keyup.55.103="displayNumber(7)" @keyup.56.104="displayNumber(8)" @keyup.57.105="displayNumber(9)" />
+    <GlobalEvents @keyup.48.96="displayNumber(0)" @keyup.49.97="displayNumber(1)" @keyup.50.98="displayNumber(2)" @keyup.51.99="displayNumber(3)" @keyup.52.100="displayNumber(4)" @keyup.53.101="displayNumber(5)" @keyup.54.102="displayNumber(6)" @keyup.55.103="displayNumber(7)" @keyup.56.104="displayNumber(8)" @keyup.57.105="displayNumber(9)" @keyup.187="addAction('+')" @keyup.189="addAction('-')" @keyup.*="addAction('*')" @keyup.191="addAction('/')" />
     <p id="title">Kalkulator</p>
     <div id="log">{{ Numbers }}</div>
     <div id="display">{{ displayed }}</div>
@@ -23,7 +23,7 @@
       <div @click="addAction('+')" class="calcButton">+</div>
       <div @click="invert()" class="calcButton">±</div>
       <div @click="displayNumber(0)" class="calcButtonN">0</div>
-      <div class="calcButton">,</div>
+      <div @click="addComma()" class="calcButton">,</div>
       <div @click="getResult()" class="calcButton">=</div>
     </div>
 
@@ -48,13 +48,8 @@ export default {
   {
     displayNumber(number){
       if(this.displayed.length<=16)
-      {
-      
+      {      
       this.displayed = this.displayed+number;
-      }
-      else
-      {
-        this.displayed = this.displayed;
       }
 
     },
@@ -95,12 +90,23 @@ export default {
       }
       else return true;
     },
+    checkComma(){
+      if(this.displayed.charAt(this.displayed.length-1)=== ",")
+      {
+        return false;
+      }
+      else return true;
+    },
     getResult()
     {
      
      this.displayed = eval(this.Numbers+this.displayed);
      this.Numbers="";
      
+    },
+    addComma(){
+      if(checkSign)
+      this.displayed += ",";
     }
     
   }
