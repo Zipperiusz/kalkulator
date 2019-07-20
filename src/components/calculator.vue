@@ -1,13 +1,14 @@
 <template>
-  <div id="window" >
-    <GlobalEvents @keyup.48.96="displayNumber(0)" @keyup.49.97="displayNumber(1)" @keyup.50.98="displayNumber(2)" @keyup.51.99="displayNumber(3)" @keyup.52.100="displayNumber(4)" @keyup.53.101="displayNumber(5)" @keyup.54.102="displayNumber(6)" @keyup.55.103="displayNumber(7)" @keyup.56.104="displayNumber(8)" @keyup.57.105="displayNumber(9)" />
+  <div id="window">
     <p id="title">Kalkulator</p>
-    <div id="log">{{ Numbers }}</div>
+    <div id="log">{{ operationLog }}</div>
     <div id="display">{{ displayed }}</div>
     <div id="calcButtons">
       <div class="calcButton">%</div>
       <div @click="clearAll()" class="calcButton">C</div>
-      <div @click="deleteNumber()" class="calcButton"><img id="delete" src="../assets/delete.png"></div>
+      <div @click="deleteNumber()" class="calcButton">
+        <img id="delete" src="../assets/delete.png" />
+      </div>
       <div @click="addAction('/')" class="calcButton">÷</div>
       <div @click="displayNumber(7)" class="calcButtonN">7</div>
       <div @click="displayNumber(8)" class="calcButtonN">8</div>
@@ -26,85 +27,91 @@
       <div class="calcButton">,</div>
       <div @click="getResult()" class="calcButton">=</div>
     </div>
-
   </div>
 </template>
 
 <script>
-import GlobalEvents from 'vue-global-events'
+import GlobalEvents from "vue-global-events";
 export default {
   components: { GlobalEvents },
-  name: 'calculator',
-  data(){
-    return{
-      displayed:"",
-      Numbers:"",
-      result:undefined
-
-      
-    }
+  name: "calculator",
+  data() {
+    return {
+      displayed: "",
+      numbers: [],
+      result: undefined
+    };
   },
-  methods:
-  {
-    displayNumber(number){
-      if(this.displayed.length<=16)
-      {
-      
-      this.displayed = this.displayed+number;
+  beforeMount() {
+    window.addEventListener("keyup", this.onKeyUp);
+  },
+  beforeDestroy() {
+    window.removeEventListener("keyup", this.onKeyUp);
+  },
+  methods: {
+    onKeyUp(e) {
+      if (/^\d$/.test(e.key)) {
+        this.displayNumber(+e.key);
       }
-      else
-      {
-        this.displayed = this.displayed;
+    },
+    displayNumber(number) {
+      if (this.displayed.length <= 16) {
+        this.displayed = this.displayed + number;
+      }
+    },
+    addAction(e) {
+      if (this.displayed.length) {
+        this.numbers.push(this.displayed);
       }
 
-    },
-    addAction(e){
-      if(this.displayed!==""){
-      if(!this.checkSign()){
-      this.Numbers =this.Numbers +  this.displayed+e;
-      this.displayed="";
+      if (this.isAction()) {
+        this.$set(this.numbers, this.numbers.length - 1, e);
+      } else if (this.displayed.length) {
+        this.numbers.push(e);
       }
-      }
-
+      this.displayed = "";
     },
-    deleteNumber()
-    {
-      this.displayed = this.displayed.toString();
+    deleteNumber() {
       this.displayed = this.displayed.slice(0, -1);
     },
-    clearAll()
-    {
+    clearAll() {
       this.displayed = "";
-      this.Numbers = "";
+      this.numbers = [];
       this.result = undefined;
     },
-    invert()
-    {
-      this.displayed = Number(this.displayed);
-      if(this.displayed!==undefined);
-      {
-
-        this.displayed = this.displayed*-1;
-        this.displayed = this.displayed.toString();
+    invert() {
+      if (this.displayed.length) {
+        if (this.displayed[0] == "-") {
+          this.displayed = this.displayed.substring(1);
+        } else {
+          this.displayed = "-" + this.displayed;
+        }
       }
     },
-    checkSign(){
-      if(this.Numbers.charAt(this.Numbers.length-1)=== "*"||"-"||"+"||"/")
-      {
+    isAction() {
+      if (this.numbers.length >= 2) {
+        const sign = this.numbers[this.numbers.length - 1];
+        if (sign === "*" || sign === "-" || sign === "+" || sign === "/") {
+          return true;
+        }
         return false;
       }
-      else return true;
+      return false;
     },
-    getResult()
-    {
-     
-     this.displayed = eval(this.Numbers+this.displayed);
-     this.Numbers="";
-     
+    getResult() {
+      if (this.isAction()) {
+        this.numbers.push(this.displayed);
+        this.displayed = eval(this.numbers.join(""));
+        this.numbers = [];
+      }
     }
-    
+  },
+  computed: {
+    operationLog() {
+      return this.numbers.join("");
+    }
   }
-}
+};
 
 //pobieranie wartości wciśniętego przycisku
 //window.addEventListener('keydown', function(e) {
@@ -114,76 +121,64 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-#window
-{
-  background-color:#3f4041;
-  width:400px;
+#window {
+  background-color: #3f4041;
+  width: 400px;
   height: 400px;
   margin-left: auto;
-  margin-right:auto;
-  color:white;
+  margin-right: auto;
+  color: white;
 }
-#display
-{
+#display {
   text-align: right;
-  padding:8px;
-  font-size:24px;
-  width:356px;
-  margin-left:auto;
-  margin-right:auto;
-  height:20px;
+  padding: 8px;
+  font-size: 24px;
+  width: 356px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 20px;
   letter-spacing: 1px;
 }
-#log
-{
+#log {
   text-align: right;
-  padding:8px;
-  font-size:10px;
-  width:356px;
-  margin-left:auto;
-  margin-right:auto;
-  height:20px;
+  padding: 8px;
+  font-size: 10px;
+  width: 356px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 20px;
   letter-spacing: 1px;
 }
-.calcButtonN
-{
+.calcButtonN {
   text-align: center;
-  display:inline-block;
-  padding:15px;
-  width:60px;
-  background-color:#242525;
-  margin:2px;
+  display: inline-block;
+  padding: 15px;
+  width: 60px;
+  background-color: #242525;
+  margin: 2px;
   cursor: pointer;
-  
 }
-#delete
-{
-  width:14px;
+#delete {
+  width: 14px;
 }
-.calcButtonN:hover
-{
-  background-color:#717274;
+.calcButtonN:hover {
+  background-color: #717274;
 }
-.calcButton
-{
+.calcButton {
   text-align: center;
-  display:inline-block;
-  padding:15px;
-  width:60px;
-  background-color:#333535;
-  margin:2px;
+  display: inline-block;
+  padding: 15px;
+  width: 60px;
+  background-color: #333535;
+  margin: 2px;
   cursor: pointer;
-  
 }
-.calcButton:hover
-{
-  background-color:#717274;
+.calcButton:hover {
+  background-color: #717274;
 }
-#title
-{
-  text-align:left;
-  padding:10px;
-  color:#7f8585;
+#title {
+  text-align: left;
+  padding: 10px;
+  color: #7f8585;
 }
 </style>
