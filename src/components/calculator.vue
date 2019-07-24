@@ -51,17 +51,18 @@ export default {
       {
         this.displayNumber(+e.key);
       }
+
     },
     displayNumber(number)
     {
       if (this.displayed.length <= 16)
       {
-        if(this.displayed.length==0)
+        this.displayed = this.displayed + number;
+        if(this.displayed.length==2)
         {
-          if(number != 0) 
-          this.displayed = this.displayed + number;         
+          if(this.displayed[0,1]==0)
+          this.displayed= "0";
         }
-        else this.displayed = this.displayed + number;        
       }
     },
     addAction(e)
