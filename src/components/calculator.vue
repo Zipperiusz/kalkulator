@@ -51,7 +51,6 @@ export default {
       {
         this.displayNumber(+e.key);
       }
-
     },
     displayNumber(number)
     {
@@ -62,9 +61,7 @@ export default {
           if(number != 0) 
           this.displayed = this.displayed + number;         
         }
-        else
-        this.displayed = this.displayed + number;      
-        
+        else this.displayed = this.displayed + number;        
       }
     },
     addAction(e)
