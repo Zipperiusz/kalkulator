@@ -57,9 +57,14 @@ export default {
     {
       if (this.displayed.length <= 16)
       {
-        this.displayed = this.displayed + number;
-
-
+        if(this.displayed.length==0)
+        {
+          if(number != 0) 
+          this.displayed = this.displayed + number;         
+        }
+        else
+        this.displayed = this.displayed + number;      
+        
       }
     },
     addAction(e)
