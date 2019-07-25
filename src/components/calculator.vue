@@ -46,12 +46,12 @@ export default {
     window.removeEventListener("keyup", this.onKeyUp);
   },
   methods: {
-    onKeyUp(e) {
+    onKeyUp(e)
+    {
       if (/^\d$/.test(e.key))
       {
         this.displayNumber(+e.key);
       }
-
     },
     displayNumber(number)
     {
@@ -62,6 +62,10 @@ export default {
         {
           if(this.displayed[0,1]==0)
           this.displayed= "0";
+          if(this.displayed[0]==0)
+          {
+            this.displayed = number.toString();
+          }
         }
       }
     },
@@ -70,10 +74,8 @@ export default {
       this.isDoubleMinus();
       if (this.displayed.length)
       {
-        this.numbers.push(this.displayed);
-        
+        this.numbers.push(this.displayed);        
       }
-
       if (this.isAction())
       {
         this.$set(this.numbers, this.numbers.length - 1, e);
