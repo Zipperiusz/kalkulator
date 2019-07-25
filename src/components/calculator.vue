@@ -60,12 +60,11 @@ export default {
         this.displayed = this.displayed + number;
         if(this.displayed.length==2)
         {
-          if(this.displayed[0,1]==0)
+          if(this.displayed[0]==0 && this.displayed[1]==0)
           this.displayed= "0";
           if(this.displayed[0]==0)
-          {
-            this.displayed = number.toString();
-          }
+          this.displayed = number.toString();
+        
         }
       }
     },
